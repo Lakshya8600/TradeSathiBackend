@@ -1,5 +1,4 @@
 from flask import Flask, redirect, url_for, request, jsonify
-
 import yfinance as yf, threading, time, pandas as pd, os
 from datetime import date
 import pandas_ta as ta
@@ -11,11 +10,7 @@ app = Flask(__name__)
 cors = CORS(app)
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-# app.app_context().push()
-
 CompanyNames = pd.read_csv("CompanyNames.csv")
-# CompanyDataList = os.listdir(os.getcwd()+"/StockData")
-
 
 def lstostr(list):
     strii = ""
@@ -28,6 +23,7 @@ def bgtask():
     """background task of getting yfinance data and storing in data base with formatting"""
     currentMin = datetime.now().minute
     while True:
+
         if currentMin is not datetime.now().minute:
             currentMin = datetime.now().minute
             suddenpt7list = []
@@ -73,7 +69,7 @@ def bgtask():
 
                 except:
                     pass
-            print("sdkjfdsj fs flkj sfkl jaskl fsdjkfh lkas fjkahkfhsk f") 
+            print("sdkjfdsj fs flkj sfkl jaskl fsdjkfh lkas fjkahkfhsk f")
             # saving lists
             with open("Results/suddenpt7.txt", "w") as file:
                 file.write(lstostr(suddenpt7list))
@@ -86,8 +82,10 @@ def bgtask():
             with open("Results/rsi70.txt", "w") as file:
                 file.write(lstostr(rsi70list))
             with open("Results/minute.txt", "w") as file:
-                file.write(datetime.now(pytz.timezone("Asia/Calcutta")).strftime("%H:%M:%S"))
-        
+                file.write(
+                    datetime.now(pytz.timezone("Asia/Calcutta")).strftime("%H:%M:%S")
+                )
+
 
 @app.route("/")
 def hello_wod():
@@ -100,7 +98,7 @@ def hello_world():
         with app.app_context():
             with open("Results/suddenpt7.txt", "r") as file:
                 val = file.read()
-                return val
+                return jsonify(val)
 
 
 @app.route("/getsudden2per", methods=["POST", "GET"])
@@ -109,7 +107,7 @@ def helo_wrld():
         with app.app_context():
             with open("Results/sudden2per.txt", "r") as file:
                 val = file.read()
-                return val
+                return jsonify(val)
 
 
 @app.route("/getvwap", methods=["POST", "GET"])
@@ -118,7 +116,7 @@ def helod():
         with app.app_context():
             with open("Results/vwap.txt", "r") as file:
                 val = file.read()
-                return val
+                return jsonify(val)
 
 
 @app.route("/getrsi30", methods=["POST", "GET"])
@@ -127,7 +125,7 @@ def hello_w():
         with app.app_context():
             with open("Results/rsi30.txt", "r") as file:
                 val = file.read()
-                return val
+                return jsonify(val)
 
 
 @app.route("/getrsi70", methods=["POST", "GET"])
@@ -136,9 +134,10 @@ def helworld():
         with app.app_context():
             with open("Results/rsi70.txt", "r") as file:
                 val = file.read()
-                return val
+                return jsonify(val)
 
             pass
+
 
 @app.route("/minute", methods=["POST", "GET"])
 def helwld():
@@ -146,9 +145,10 @@ def helwld():
         with app.app_context():
             with open("Results/minute.txt", "r") as file:
                 val = file.read()
-                return val
+                return jsonify(val)
 
             pass
+
 
 if __name__ == "__main__":
     with app.app_context():
